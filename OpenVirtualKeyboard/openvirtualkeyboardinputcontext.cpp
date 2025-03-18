@@ -25,6 +25,13 @@ OpenVirtualKeyboardInputContext::OpenVirtualKeyboardInputContext( const QStringL
     const bool inOwnWindow = params.contains( QStringLiteral("ownWindow"), Qt::CaseInsensitive );
     const bool noScroll =
         params.contains( QStringLiteral( "noContentScrolling" ), Qt::CaseInsensitive );
+    int screen_idx = -1;
+    for (auto param: params) {
+        if (param.startsWith("screen", Qt::CaseInsensitive)) {
+            QStringList p = param.split("=");
+            screen_idx = p[1].toInt();
+        }
+    }
 
     _keyboardComponentUrl = inOwnWindow ? QUrl( "qrc:///ovk/qml/KeyboardWindow.qml" )
                                         : QUrl( "qrc:///ovk/qml/Keyboard.qml" );
@@ -32,7 +39,7 @@ OpenVirtualKeyboardInputContext::OpenVirtualKeyboardInputContext( const QStringL
     if (params.contains( QStringLiteral("immediateLoading"), Qt::CaseInsensitive ))
         loadKeyboard();
 
-    _positioner.reset( createPositioner( inOwnWindow, noScroll ));
+    _positioner.reset( createPositioner( inOwnWindow, noScroll, screen_idx ));
     _positioner->enableAnimation( animated );
 
     connect( qGuiApp, &QGuiApplication::applicationStateChanged, this, []( Qt::ApplicationState s ){
@@ -549,9 +556,10 @@ bool OpenVirtualKeyboardInputContext::isShiftDoubleClicked() const
 }
 
 AbstractPositioner* OpenVirtualKeyboardInputContext::createPositioner( bool inOwnWindow,
-                                                                       bool noContentScroll ) const
+                                                                       bool noContentScroll,
+                                                                       int screen ) const
 {
     if (inOwnWindow)
-        return new KeyboardWindowPositioner;
+        return new KeyboardWindowPositioner(screen);
     return new InjectedKeyboardPositioner( noContentScroll );
 }

@@ -12,9 +12,13 @@
 #include <QQuickItem>
 #include <QScreen>
 #include <QDebug>
+#include <QtGui/qguiapplication.h>
 #include "loggingcategory.h"
 #include "keypreview.h"
 #include "keyalternativespreview.h"
+
+KeyboardWindowPositioner::KeyboardWindowPositioner(int screen_idx): _screen_idx(screen_idx)
+{}
 
 KeyboardWindowPositioner::~KeyboardWindowPositioner() = default;
 
@@ -76,24 +80,32 @@ void KeyboardWindowPositioner::show()
         if (alreadyShown)
             return;
 
-        const auto screen = _focusItem->window()->screen();
-        if (!screen)
-            return;
+        QScreen *screen;
+        if (_screen_idx != -1) {
+            QGuiApplication *app = qobject_cast<QGuiApplication*>( QCoreApplication::instance() );
+            screen = app->screens()[_screen_idx];
+            _keyboardWindow->setScreen(screen);
+        } else {
+            screen = _focusItem->window()->screen();
+            if (!screen)
+                return;
+        }
 
         const auto geometry = screen->geometry();
 
         // Note: height + 1 pixel as a work around, because of odd behaviour when
         // transparent area of keyboard window was rendered as black.
+        int screen_y = geometry.top();
         _keyboardWindow->setGeometry(
-            geometry.x(), _keyboard->height(), geometry.width(), geometry.height() + 1 );
+            geometry.x(), screen_y + _keyboard->height(), geometry.width(), geometry.height() + 1 );
         _keyboardWindow->show();
 
         if ( _animation ) {
-            _animation->setStartValue( _keyboard->height() );
-            _animation->setEndValue( 0 );
+            _animation->setStartValue( screen_y + _keyboard->height() );
+            _animation->setEndValue( screen_y );
             _animation->start();
         } else {
-            _keyboardWindow->setY( 0 );
+            _keyboardWindow->setY( screen_y );
         }
     });
 }
@@ -110,12 +122,18 @@ void KeyboardWindowPositioner::hide( bool suppressAnimation )
     if (!_keyboardWindow || !_keyboard)
         return;
 
+    int screen_y = 0;
+    if (_screen_idx != -1) {
+        QGuiApplication *app = qobject_cast<QGuiApplication*>( QCoreApplication::instance() );
+        QScreen *screen = app->screens()[_screen_idx];
+        screen_y = screen->geometry().top();
+    }
     if (_animation && !suppressAnimation) {
-        _animation->setStartValue( 0 );
-        _animation->setEndValue( _keyboard->height() );
+        _animation->setStartValue( screen_y );
+        _animation->setEndValue( screen_y + _keyboard->height() );
         _animation->start();
     } else {
-        _keyboardWindow->setY( _keyboard->height() );
+        _keyboardWindow->setY( screen_y + _keyboard->height() );
         _keyboardWindow->hide();
     }
 }
