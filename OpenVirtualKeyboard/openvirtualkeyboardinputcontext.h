@@ -10,12 +10,12 @@
 #include <memory>
 #include <qpa/qplatforminputcontext.h>
 #include <QPointer>
+#include <QStringList>
 #include <QUrl>
 #include "keyboardlayouttype.h"
 #include "keyboardlayoutsprovider.h"
 
 class QQuickItem;
-class QStringList;
 class KeyboardCreator;
 class Key;
 class AbstractPositioner;
