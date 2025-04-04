@@ -26,9 +26,8 @@ T propertyValue( QObject* object, const char* name, T defaultValue, bool& valid 
         return defaultValue;
     }
     auto value = object->property( name );
-    valid      = value.isValid()
-        && static_cast<QMetaType::Type>( value.type() )
-            == static_cast<QMetaType::Type>( qMetaTypeId<T>() );
+    valid = value.isValid()
+        && static_cast<QMetaType::Type>(value.typeId()) == static_cast<QMetaType::Type>(qMetaTypeId<T>());
     return valid ? value.value<T>() : defaultValue;
 }
 

@@ -167,7 +167,7 @@ bool KeyPressInterceptor::isTouchAllowed( const QTouchEvent::TouchPoint& point )
 {
     if (point.id() == _touchPointId) {
         return true;
-    } else if (_touchPointId == -1 && point.state() == Qt::TouchPointPressed) {
+    } else if (_touchPointId == -1 && point.state() == QEventPoint::State::Pressed) {
         _touchPointId = point.id();
         return true;
     }
@@ -221,17 +221,17 @@ void KeyPressInterceptor::stopTimer( int& timerId )
 
 void KeyPressInterceptor::mousePressEvent( QMouseEvent* event )
 {
-    forwardPress( event->localPos() );
+    forwardPress( event->position() );
 }
 
 void KeyPressInterceptor::mouseMoveEvent( QMouseEvent* event )
 {
-    forwardMove( event->localPos() );
+    forwardMove( event->position() );
 }
 
 void KeyPressInterceptor::mouseReleaseEvent( QMouseEvent* event )
 {
-    forwardRelease( event->localPos() );
+    forwardRelease( event->position() );
 }
 
 void KeyPressInterceptor::touchEvent( QTouchEvent* event )
@@ -240,18 +240,18 @@ void KeyPressInterceptor::touchEvent( QTouchEvent* event )
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:
         case QEvent::TouchEnd:
-            for (auto&& point : event->touchPoints()) {
+            for (auto&& point : event->points()) {
                 if (!isTouchAllowed( point ))
                     continue;
                 switch (point.state()) {
                     case Qt::TouchPointPressed:
-                        forwardPress( point.pos() );
+                        forwardPress( point.position() );
                         break;
                     case Qt::TouchPointMoved:
-                        forwardMove( point.pos() );
+                        forwardMove( point.position() );
                         break;
                     case Qt::TouchPointReleased:
-                        forwardRelease( point.pos() );
+                        forwardRelease( point.position() );
                         break;
                     default:
                         break;
