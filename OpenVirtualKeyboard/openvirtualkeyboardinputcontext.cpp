@@ -58,10 +58,17 @@ bool OpenVirtualKeyboardInputContext::isValid() const
 void OpenVirtualKeyboardInputContext::setFocusObject( QObject* object )
 {
     _focusObject = object;
-    _positioner->updateFocusItem( imEnabledFocusItem() );
-    setupTextChangedListener();
-    updateEnterKeyAction();
-    updateInputMethodHints();
+    if (QQuickItem *item = qobject_cast<QQuickItem *>(object)) {
+        QString typeName = item->metaObject()->className();
+        if (typeName.startsWith("TextField_QMLTYPE") || typeName.startsWith("TextArea_QMLTYPE")) {
+            _positioner->updateFocusItem( imEnabledFocusItem() );
+            setupTextChangedListener();
+            updateEnterKeyAction();
+            updateInputMethodHints();
+            return;
+        }
+    }
+    hideInputPanel();
 }
 
 bool OpenVirtualKeyboardInputContext::isAnimating() const
