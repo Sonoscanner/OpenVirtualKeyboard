@@ -6,21 +6,21 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CXX_STANDARD 17)
 set(CMAKE_AUTORCC ON)
 
-# option(USE_QTQUICKCOMPILED_RESOURCES OFF)
+option(USE_QTQUICKCOMPILED_RESOURCES OFF)
 
-# if(${USE_QTQUICKCOMPILED_RESOURCES})
-#     find_package(Qt5QuickCompiler)
-#     set(PROJECT_ADD_RESOURCES qtquick_compiler_add_resources)
-# else()
-#     set(PROJECT_ADD_RESOURCES qt5_add_resources)
-# endif()
+if(${USE_QTQUICKCOMPILED_RESOURCES})
+    find_package(Qt6QuickCompiler)
+    set(PROJECT_ADD_RESOURCES qtquick_compiler_add_resources)
+else()
+    set(PROJECT_ADD_RESOURCES qt6_add_resources)
+endif()
 
 find_package(Qt6 COMPONENTS Quick Core Gui REQUIRED)
 
-# cmake_language(CALL ${PROJECT_ADD_RESOURCES} KEYBOARD_LIBRARY_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/qml.qrc)
+cmake_language(CALL ${PROJECT_ADD_RESOURCES} KEYBOARD_LIBRARY_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/qml.qrc)
 
 
-qt_add_plugin(OpenVirtualKeyboard STATIC
+qt_add_plugin(OpenVirtualKeyboard SHARED
     CLASS_NAME OpenVirtualKeyboardPlugin
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/commonpositioner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/injectedkeyboardpositioner.cpp
@@ -67,11 +67,11 @@ target_include_directories(
     ${Qt6Gui_INCLUDE_DIRS}
 )
 
-# set_target_properties(OpenVirtualKeyboard
-#     PROPERTIES
-#     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/platforminputcontexts
-#     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/platforminputcontexts
-# )
+set_target_properties(OpenVirtualKeyboard
+    PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/platforminputcontexts
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/platforminputcontexts
+)
 
 target_link_libraries(OpenVirtualKeyboard
     PRIVATE
