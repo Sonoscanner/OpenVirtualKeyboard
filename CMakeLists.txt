@@ -2,9 +2,10 @@ project(OpenVirtualKeyboardProj)
 cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 
 set(CXX_STANDARD 17)
-set(CMAKE_AUTORCC ON)
 
 option(USE_QTQUICKCOMPILED_RESOURCES OFF)
 
@@ -20,8 +21,7 @@ find_package(Qt6 COMPONENTS Quick Core Gui REQUIRED)
 cmake_language(CALL ${PROJECT_ADD_RESOURCES} KEYBOARD_LIBRARY_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/qml.qrc)
 
 
-qt_add_plugin(OpenVirtualKeyboard SHARED
-    CLASS_NAME OpenVirtualKeyboardPlugin
+add_library(OpenVirtualKeyboard SHARED
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/commonpositioner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/injectedkeyboardpositioner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/key.cpp
@@ -55,7 +55,7 @@ qt_add_plugin(OpenVirtualKeyboard SHARED
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/openvirtualkeyboardplugin.h
     ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/utils.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/qml.qrc
+    ${KEYBOARD_LIBRARY_RESOURCES}
 )
 
 target_include_directories(
