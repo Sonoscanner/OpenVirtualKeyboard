@@ -1,5 +1,5 @@
-project(OpenVirtualKeyboardProj)
 cmake_minimum_required(VERSION 3.20)
+project(OpenVirtualKeyboardProj)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -16,7 +16,8 @@ else()
     set(PROJECT_ADD_RESOURCES qt6_add_resources)
 endif()
 
-find_package(Qt6 COMPONENTS Quick Core Gui REQUIRED)
+set(QT_VERSION 6.9)
+find_package(Qt6 ${QT_VERSION} REQUIRED COMPONENTS Quick Core Gui)
 
 cmake_language(CALL ${PROJECT_ADD_RESOURCES} KEYBOARD_LIBRARY_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/OpenVirtualKeyboard/qml.qrc)
 
