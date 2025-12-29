@@ -100,15 +100,17 @@ Row {
                     id: languageButton
                     property real __stretch: modelData.hasOwnProperty("stretch") ? modelData.stretch : 1
                     property var languagesModel: InputContext.layoutProvider.layoutsList
-                    property int selectedLanguageIndex: InputContext.layoutProvider.selectedLayoutIndex
-                    onSelectedLanguageIndexChanged: InputContext.layoutProvider.selectedLayoutIndex = selectedLanguageIndex
                     property T.Popup languageMenu: style.languageMenu.createObject(languageButton)
                     type: Key.Language
                     delegate: style.languageKey.createObject(languageButton)
                     enabled: InputContext.layoutProvider.layoutsCount > 1
                     height: root.height
                     width: __stretch * adaptedStretch * baseWidth
-                    onClicked: languageMenu.open()
+                    onClicked: {
+                        onClicked: {
+                            InputContext.layoutProvider.selectedLayoutIndex = (InputContext.layoutProvider.selectedLayoutIndex + 1) % InputContext.layoutProvider.layoutsCount;
+                        }
+                    }
                     Component.onDestruction: {
                         languageMenu.destroy();
                         delegate.destroy();

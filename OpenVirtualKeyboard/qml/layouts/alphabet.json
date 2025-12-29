@@ -1,7 +1,7 @@
 [
     [
         [
-            { "type": "key", "text": "q", "alternatives": "A" },
+            { "type": "key", "text": "q", "alternatives": "Q" },
             { "type": "key", "text": "w", "alternatives": "W" },
             { "type": "key", "text": "e", "alternatives": "E" },
             { "type": "key", "text": "r", "alternatives": "R" },
@@ -15,35 +15,35 @@
         ],
         [
             { "type": "filler", "stretch": 0.32 },
-            { "type": "key", "text": "a", "alternatives": "a" },
+            { "type": "key", "text": "a", "alternatives": "A" },
             { "type": "key", "text": "s", "alternatives": "s" },
-            { "type": "key", "text": "d", "alternatives": "E" },
-            { "type": "key", "text": "f", "alternatives": "R" },
-            { "type": "key", "text": "g", "alternatives": "T" },
-            { "type": "key", "text": "h", "alternatives": "Y" },
-            { "type": "key", "text": "j", "alternatives": "U" },
-            { "type": "key", "text": "k", "alternatives": "I" },
-            { "type": "key", "text": "l", "alternatives": "O" },
+            { "type": "key", "text": "d", "alternatives": "D" },
+            { "type": "key", "text": "f", "alternatives": "F" },
+            { "type": "key", "text": "g", "alternatives": "G" },
+            { "type": "key", "text": "h", "alternatives": "H" },
+            { "type": "key", "text": "j", "alternatives": "J" },
+            { "type": "key", "text": "k", "alternatives": "K" },
+            { "type": "key", "text": "l", "alternatives": "L" },
             { "type": "enter", "stretch": 1.8 }
         ],
         [
             { "type": "shift", "stretch": 1.15 },
-            { "type": "key", "text": "z", "alternatives": "A" },
-            { "type": "key", "text": "x", "alternatives": "W" },
-            { "type": "key", "text": "c", "alternatives": "E" },
-            { "type": "key", "text": "v", "alternatives": "R" },
-            { "type": "key", "text": "b", "alternatives": "T" },
-            { "type": "key", "text": "n", "alternatives": "Y" },
-            { "type": "key", "text": "m", "alternatives": "U" },
-            { "type": "key", "text": ",", "alternatives": "I" },
-            { "type": "key", "text": ".", "alternatives": "O" },
+            { "type": "key", "text": "z", "alternatives": "Z" },
+            { "type": "key", "text": "x", "alternatives": "X" },
+            { "type": "key", "text": "c", "alternatives": "C" },
+            { "type": "key", "text": "v", "alternatives": "V" },
+            { "type": "key", "text": "b", "alternatives": "B" },
+            { "type": "key", "text": "n", "alternatives": "N" },
+            { "type": "key", "text": "m", "alternatives": "M" },
+            { "type": "key", "text": ",", "alternatives": "?" },
+            { "type": "key", "text": ".", "alternatives": "!" },
             { "type": "shift", "stretch": 1.3 }
         ],
         [
             { "type": "symbol", "text": "&123" },
             { "type": "language" },
             { "type": "space", "stretch": 5 },
-            { "type": "key", "text": ":-)", "alternatives": [ ";-)", ":-)", ":-D", ":-(", "<3" ] },
+            { "type": "symbol", "text": "&123" },
             { "type": "hide" }
         ]
     ]
