@@ -107,9 +107,7 @@ Row {
                     height: root.height
                     width: __stretch * adaptedStretch * baseWidth
                     onClicked: {
-                        onClicked: {
-                            InputContext.layoutProvider.selectedLayoutIndex = (InputContext.layoutProvider.selectedLayoutIndex + 1) % InputContext.layoutProvider.layoutsCount;
-                        }
+                        InputContext.layoutProvider.selectedLayoutIndex = (InputContext.layoutProvider.selectedLayoutIndex + 1) % InputContext.layoutProvider.layoutsCount;
                     }
                     Component.onDestruction: {
                         languageMenu.destroy();

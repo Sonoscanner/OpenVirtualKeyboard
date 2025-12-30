@@ -22,8 +22,7 @@ const QString DIAL_FILENAME     = QStringLiteral( "dial.json" );
 
 KeyboardLayoutsProvider::KeyboardLayoutsProvider()
 {
-    loadDefaultLayout();
-    loadCustomLayouts();
+    loadEmbeddedLayouts();
     applySystemLocaleLayout();
     emit layoutsCountChanged();
 }
@@ -114,64 +113,47 @@ QString KeyboardLayoutsProvider::selectedLayout() const
 
 void KeyboardLayoutsProvider::loadDefaultLayout()
 {
-    auto& data    = _layoutData[ "en_US" ];
-    data.alphabet = loadLayoutData( ":/ovk/qml/layouts/" + ALPHABET_FILENAME );
-    data.symbols  = loadLayoutData( ":/ovk/qml/layouts/" + SYMBOLS_FILENAME );
-    data.dial     = loadLayoutData( ":/ovk/qml/layouts/" + DIAL_FILENAME );
-    data.numbers  = loadLayoutData( ":/ovk/qml/layouts/" + NUMBERS_FILENAME );
-    data.digits   = loadLayoutData( ":/ovk/qml/layouts/" + DIGITS_FILENAME );
+    const QString base = ":/ovk/qml/layouts/en_US/";
+
+    auto& data = _layoutData["en_US"];
+    data.alphabet = loadLayoutData(base + ALPHABET_FILENAME);
+    data.symbols  = loadLayoutData(base + SYMBOLS_FILENAME);
+    data.dial     = loadLayoutData(base + DIAL_FILENAME);
+    data.numbers  = loadLayoutData(base + NUMBERS_FILENAME);
+    data.digits   = loadLayoutData(base + DIGITS_FILENAME);
 }
 
-void KeyboardLayoutsProvider::loadCustomLayouts()
+void KeyboardLayoutsProvider::loadEmbeddedLayouts()
 {
-    const auto  layoutsPath = ovk::layoutsAbsolutePath();
-    const QDir  layouts( layoutsPath );
+    const QString basePath = ":/ovk/qml/layouts/";
+    const QDir baseDir(basePath);
 
-    if (layoutsPath.isEmpty() || !layouts.exists()) {
-        qCDebug(logOvk) << "custom layouts not found, only default en_US will be available";
+    if (!baseDir.exists()) {
+        qCDebug(logOvk) << "No embedded layouts found";
         return;
     }
 
-    QStringList layoutFilesFilter {
-        ALPHABET_FILENAME, SYMBOLS_FILENAME, DIGITS_FILENAME, NUMBERS_FILENAME, DIAL_FILENAME
-    };
+    const QStringList localeDirs =
+        baseDir.entryList(QDir::Dirs | QDir::NoDot | QDir::NoDotDot);
 
-    const auto& fallback     = _layoutData[ "en_US" ];
-    const auto  layoutsDirs  = layouts.entryList( QDir::Dirs | QDir::NoDot | QDir::NoDotDot );
+    if (localeDirs.isEmpty()) {
+        qCDebug(logOvk) << "Layouts directory is empty";
+        return;
+    }
 
-    if (!layoutsDirs.isEmpty())
-        qCDebug( logOvk ).noquote() << "trying to load custom layouts:" << layoutsDirs.join( ", " );
+    qCDebug(logOvk).noquote()
+        << "Loading embedded layouts:" << localeDirs.join(", ");
 
-    const auto asignLayout = [this]( const QString&     fileName,
-                                     const QString&     layoutDir,
-                                     const QStringList& foundFiles,
-                                     const QJsonArray&  fallback ) {
-        if (foundFiles.contains( fileName )) {
-            qCDebug(logOvk).noquote() << ".. loading file" << fileName;
-            return loadLayoutData( layoutDir + fileName );
-        } else {
-            qCDebug(logOvk).noquote() << ".. providing fallback of" << fileName;
-            return fallback;
-        }
-    };
+    for (const QString& locale : localeDirs) {
+        const QString dir = basePath + locale + "/";
 
-    for (auto&& layoutDirName : layoutsDirs) {
-        const QDir layoutDir( layoutsPath + layoutDirName );
-        const auto layoutFiles = layoutDir.entryList( layoutFilesFilter );
+        auto& data = _layoutData[locale];
 
-        if (layoutFiles.isEmpty())
-            continue;        
-
-        const auto dirPath = layoutDir.absolutePath() + QDir::separator();
-        auto&      data    = _layoutData[layoutDirName];
-
-        qCDebug( logOvk ).noquote() << "trying to load layout files from:" << dirPath;
-
-        data.alphabet = asignLayout( ALPHABET_FILENAME, dirPath, layoutFiles, fallback.alphabet );
-        data.symbols  = asignLayout( SYMBOLS_FILENAME,  dirPath, layoutFiles, fallback.symbols  );
-        data.dial     = asignLayout( DIAL_FILENAME,     dirPath, layoutFiles, fallback.dial     );
-        data.numbers  = asignLayout( NUMBERS_FILENAME,  dirPath, layoutFiles, fallback.numbers  );
-        data.digits   = asignLayout( DIGITS_FILENAME,   dirPath, layoutFiles, fallback.digits   );
+        data.alphabet = loadLayoutData(dir + ALPHABET_FILENAME);
+        data.symbols  = loadLayoutData(dir + SYMBOLS_FILENAME);
+        data.dial     = loadLayoutData(dir + DIAL_FILENAME);
+        data.numbers  = loadLayoutData(dir + NUMBERS_FILENAME);
+        data.digits   = loadLayoutData(dir + DIGITS_FILENAME);
     }
 }
 
