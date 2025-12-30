@@ -61,8 +61,6 @@ void KeyPressInterceptor::setRepeatInterval( int repeatInterval )
 
 void KeyPressInterceptor::forwardPress( const QPointF& point )
 {
-    if (!_forwardTo || _touchPointId != -1)
-        return;
     _lastX = point.x();
     auto to = findKey( point );
 
