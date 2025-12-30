@@ -1,7 +1,7 @@
 [
     [
         [
-            { "type": "key", "text": "1", "alternatives": "A" },
+            { "type": "key", "text": "1", "alternatives": "Q" },
             { "type": "key", "text": "2", "alternatives": "W" },
             { "type": "key", "text": "3", "alternatives": "E" },
             { "type": "key", "text": "4", "alternatives": "R" },
@@ -93,7 +93,7 @@
             { "type": "language" },
             { "type": "space", "stretch": 4 },
             { "type": "key", "text": "…" },
-            { "type": "key", "text": ":-)", "alternatives": [ ";-)", ":-)", ":-D", ":-(", "<3" ] },
+            { "type": "symbol", "text": "ABC" },
             { "type": "hide" }
         ]
     ]

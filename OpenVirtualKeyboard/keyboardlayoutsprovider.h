@@ -65,6 +65,7 @@ signals:
     void layoutsCountChanged();
 
 private:
+    void loadEmbeddedLayouts();
     void loadDefaultLayout();
     void loadCustomLayouts();
     void applySystemLocaleLayout();

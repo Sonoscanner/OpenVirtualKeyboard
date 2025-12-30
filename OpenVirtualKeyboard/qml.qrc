@@ -17,11 +17,16 @@
         <file>qml/style/fontello.ttf</file>
         <file>qml/style/Icon.qml</file>
         <file>qml/style/icon-names.js</file>
-        <file>qml/layouts/alphabet.json</file>
-        <file>qml/layouts/dial.json</file>
-        <file>qml/layouts/digits.json</file>
-        <file>qml/layouts/numbers.json</file>
-        <file>qml/layouts/symbols.json</file>
+        <file>qml/layouts/en_US/alphabet.json</file>
+        <file>qml/layouts/en_US/symbols.json</file>
+        <file>qml/layouts/en_US/digits.json</file>
+        <file>qml/layouts/en_US/numbers.json</file>
+        <file>qml/layouts/en_US/dial.json</file>
+        <file>qml/layouts/fr_FR/alphabet.json</file>
+        <file>qml/layouts/fr_FR/symbols.json</file>
+        <file>qml/layouts/fr_FR/digits.json</file>
+        <file>qml/layouts/fr_FR/numbers.json</file>
+        <file>qml/layouts/fr_FR/dial.json</file>
         <file>qml/style/StyleComponents.qml</file>
         <file>qml/style/DefaultKeyPreviewDelegate.qml</file>
         <file>qml/style/DefaultKeyAlternativesPreviewDelegate.qml</file>
