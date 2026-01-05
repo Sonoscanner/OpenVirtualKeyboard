@@ -159,14 +159,22 @@ void KeyboardLayoutsProvider::loadEmbeddedLayouts()
 
 void KeyboardLayoutsProvider::applySystemLocaleLayout()
 {
-    QLocale defaultLocale; // takes locale set by QLocale::setDefault() or system's locale, if
-                           // setDefault() was not called by application
+    const QString im = qEnvironmentVariable( "QT_IM_MODULE" );
+    QString lang = im.split( "lang=" )[1];
 
-    auto lang          = defaultLocale.name();
-    lang               = _layoutData.contains( lang ) ? lang : "en_US";
-    const auto layouts = layoutsList();
-    qCDebug(logOvk).noquote() << "Applying default keyboard layout:" << lang;
-    setSelectedLayoutIndex( layouts.indexOf( lang ));
+    if ( !_layoutData.contains( lang ) ) {
+        if ( _layoutData.contains( lang + "_FR" ) )
+            lang = lang + "_FR";
+        else {
+            lang = "en_US";
+        }
+    }
+
+    const QStringList layouts = layoutsList();
+
+    qCDebug( logOvk ).noquote() << "Applying keyboard layout:" << lang;
+
+    setSelectedLayoutIndex( layouts.indexOf( lang ) );
 }
 
 QJsonArray KeyboardLayoutsProvider::loadLayoutData( const QString& layoutFilename )
