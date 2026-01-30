@@ -43,7 +43,7 @@
             { "type": "key", "text": "*" },
             { "type": "filler", "stretch": 0.5 },
             { "type": "key", "text": "0", "stretch": 2.0 },
-            { "type": "key", "text": ",", "alternatives": "." },
+            { "type": "key", "text": ".", "alternatives": "," },
             { "type": "enter" },
             { "type": "filler", "stretch": 2.5 }
         ]
