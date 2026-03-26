@@ -24,7 +24,8 @@
       { "type": "key", "text": "j", "alternatives": "J" },
       { "type": "key", "text": "k", "alternatives": "K" },
       { "type": "key", "text": "l", "alternatives": "L" },
-      { "type": "enter", "stretch": 1.8 }
+      { "type": "key", "text": "m", "alternatives": "M" },
+      { "type": "enter", "stretch": 1.15 }
     ],
     [
       { "type": "shift", "stretch": 1.15 },
@@ -34,7 +35,7 @@
       { "type": "key", "text": "v", "alternatives": "V" },
       { "type": "key", "text": "b", "alternatives": "B" },
       { "type": "key", "text": "n", "alternatives": "N" },
-      { "type": "key", "text": "m", "alternatives": "M" },
+      { "type": "key", "text": "@", "alternatives": ";" },
       {
         "type": "key",
         "text": ",",
