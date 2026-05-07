@@ -128,6 +128,8 @@ void KeyboardWindowPositioner::hide( bool suppressAnimation )
         QGuiApplication *app = qobject_cast<QGuiApplication*>( QCoreApplication::instance() );
         QScreen *screen = app->screens()[_screen_idx];
         screen_y = screen->geometry().top();
+    } else if (_keyboardWindow->screen()) {
+        screen_y = _keyboardWindow->screen()->geometry().top();
     }
     if (_animation && !suppressAnimation) {
         _animation->setStartValue( screen_y );
@@ -254,7 +256,8 @@ void KeyboardWindowPositioner::onScreenChanged( QScreen* screen )
         return;
 
     const auto geometry = screen->geometry();
-    _keyboardWindow->setGeometry( geometry.x(), 0, geometry.width(), geometry.height() + 1 );
+    const int y = _shown ? geometry.top() : geometry.top() + _keyboard->height();
+    _keyboardWindow->setGeometry( geometry.x(), y, geometry.width(), geometry.height() + 1 );
 }
 
 void KeyboardWindowPositioner::onWindowVisibleChanged( bool visible )
