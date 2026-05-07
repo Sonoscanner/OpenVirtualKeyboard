@@ -89,6 +89,7 @@ void KeyboardWindowPositioner::show()
             screen = _focusItem->window()->screen();
             if (!screen)
                 return;
+            _keyboardWindow->setScreen(screen);
         }
 
         const auto geometry = screen->geometry();
