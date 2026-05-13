@@ -100,7 +100,7 @@ private:
     void handleBackspace();
     qint64 updateLastShiftClick() const;
     bool isShiftDoubleClicked() const;
-    AbstractPositioner* createPositioner( bool inOwnWindow, bool noContentScroll, int screen ) const;
+    AbstractPositioner* createPositioner( bool inOwnWindow, bool noContentScroll, int screen, bool isCustomSize) const;
 
     QUrl                                     _keyboardComponentUrl;
     std::unique_ptr<KeyboardLayoutsProvider> _layoutsProvider;

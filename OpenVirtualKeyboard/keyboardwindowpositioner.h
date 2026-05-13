@@ -25,7 +25,7 @@ public:
      * @param _screen_idx Specify the screen on which keyboard appear in
      * multiscreen setup
      */
-    explicit KeyboardWindowPositioner(int screen_idx = -1);
+    explicit KeyboardWindowPositioner(int screen_idx = -1, bool isCustomSize = false);
     ~KeyboardWindowPositioner() override;
     void setKeyboardObject( QObject* keyboardObject ) override;
     void enableAnimation( bool enabled ) override;
@@ -45,6 +45,7 @@ private:
     void onWindowVisibleChanged( bool visible );
 
     int _screen_idx;
+    bool _isCustomSize;
     bool                                _shown = false;
     QPointer<QQuickWindow>              _keyboardWindow;
     QPointer<QQuickItem>                _keyboard;
