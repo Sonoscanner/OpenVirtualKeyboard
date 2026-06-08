@@ -86,13 +86,11 @@ void KeyboardWindowPositioner::show()
         if ( _screen_idx != -1 ) {
             QGuiApplication* app = qobject_cast<QGuiApplication*>( QCoreApplication::instance() );
             screen               = app->screens()[_screen_idx];
-            _keyboardWindow->setScreen( screen );
             qCDebug( logOvk ) << "ScreenId:" << _screen_idx;
         } else {
             screen = _focusItem->window()->screen();
             if ( !screen )
                 return;
-            _keyboardWindow->setScreen( screen );
             qCDebug( logOvk ) << "default screen";
         }
 
@@ -103,15 +101,15 @@ void KeyboardWindowPositioner::show()
         int screen_y = geometry.top();
         if ( _isCustomSize ) {
             qCDebug( logOvk ) << "Not FullScreen";
-            _keyboardWindow->setGeometry( geometry.x() + 150,
-                                          screen_y + _keyboard->height(),
-                                          geometry.width() - 150,
+            _keyboardWindow->setGeometry( geometry.x() + 140,
+                                          screen_y + geometry.height(),
+                                          geometry.width() - 140,
                                           geometry.height() + 1 );
         } else {
             qCDebug( logOvk ) << "FullScreen";
 
             _keyboardWindow->setGeometry( geometry.x(),
-                                          screen_y + _keyboard->height(),
+                                          screen_y + geometry.height(),
                                           geometry.width(),
                                           geometry.height() + 1 );
         }
@@ -119,7 +117,7 @@ void KeyboardWindowPositioner::show()
         _keyboardWindow->show();
 
         if ( _animation ) {
-            _animation->setStartValue( screen_y + _keyboard->height() );
+            _animation->setStartValue( screen_y + geometry.height() );
             _animation->setEndValue( screen_y );
             _animation->start();
         } else {
@@ -184,7 +182,7 @@ void KeyboardWindowPositioner::initKeyboardWindow()
         // Note: height + 1 pixel as a work around, because of odd behaviour when
         // transparent area of keyboard window was rendered as black.
         _keyboardWindow->setGeometry(
-            geometry.x(), _keyboard->height(), geometry.width(), geometry.height() + 1 );
+            geometry.x(), geometry.height(), geometry.width(), geometry.height() + 1 );
     }
 
     _keyboardWindow->setVisible( false );
