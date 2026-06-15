@@ -121,7 +121,7 @@ void KeyboardWindowPositioner::hide(bool suppressAnimation)
 {
     _shown = false;
 
-    if (!_keyboardWindow || !_keyboard)
+    if (!_keyboardWindow || !_keyboard || isAnimating())
         return;
 
     int screen_y = 0;
