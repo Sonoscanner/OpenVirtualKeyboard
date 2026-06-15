@@ -17,8 +17,10 @@
 #include <QTimer>
 #include <QtGui/qguiapplication.h>
 
-KeyboardWindowPositioner::KeyboardWindowPositioner(int screen_idx)
+KeyboardWindowPositioner::KeyboardWindowPositioner(int screen_idx, int marginLeft, int marginRight)
     : _screen_idx(screen_idx)
+    , _marginLeft(marginLeft)
+    , _marginRight(marginRight)
 {}
 
 KeyboardWindowPositioner::~KeyboardWindowPositioner() = default;
@@ -75,11 +77,9 @@ void KeyboardWindowPositioner::show()
             return;
         }
 
-        bool alreadyShown = _shown;
-        _shown = true;
-
-        if (alreadyShown)
+        if (_shown)
             return;
+        _shown = true;
 
         QScreen *screen;
         if (_screen_idx != -1) {
@@ -98,7 +98,7 @@ void KeyboardWindowPositioner::show()
         // Note: height + 1 pixel as a work around, because of odd behaviour when
         // transparent area of keyboard window was rendered as black.
         int screen_y = geometry.top();
-        _keyboardWindow->setGeometry(
+        setWindowGeometry(
             geometry.x(), screen_y + _keyboard->height(), geometry.width(), geometry.height() + 1);
         _keyboardWindow->show();
 
@@ -167,8 +167,8 @@ void KeyboardWindowPositioner::initKeyboardWindow()
         const auto geometry = screen->geometry();
         // Note: height + 1 pixel as a work around, because of odd behaviour when
         // transparent area of keyboard window was rendered as black.
-        _keyboardWindow->setGeometry(
-            geometry.x(), geometry.height(), geometry.width(), geometry.height() + 1);
+        setWindowGeometry(
+            geometry.x(), geometry.height(), 200, geometry.height() + 1);
     }
 
     _keyboardWindow->setVisible(false);
@@ -258,11 +258,18 @@ void KeyboardWindowPositioner::onScreenChanged(QScreen *screen)
 
     const auto geometry = screen->geometry();
     const int y = _shown ? geometry.top() : geometry.top() + _keyboard->height();
-    _keyboardWindow->setGeometry(geometry.x(), y, geometry.width(), geometry.height() + 1);
+    setWindowGeometry(geometry.x(), y, geometry.width(), geometry.height() + 1);
 }
 
 void KeyboardWindowPositioner::onWindowVisibleChanged(bool visible)
 {
     if (!visible && _shown)
         hide(true); // suppress animation to allow application properly close
+}
+
+void KeyboardWindowPositioner::setWindowGeometry(int posX, int posY, int w, int h)
+{
+    posX += _marginLeft;
+    w = w - _marginLeft - _marginRight;
+    _keyboardWindow->setGeometry(posX, posY, w, h);
 }

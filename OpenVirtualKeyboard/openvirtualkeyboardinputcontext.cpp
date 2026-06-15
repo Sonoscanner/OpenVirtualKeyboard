@@ -24,11 +24,19 @@ OpenVirtualKeyboardInputContext::OpenVirtualKeyboardInputContext(const QStringLi
     const bool animated = params.contains(QStringLiteral("animateRollout"), Qt::CaseInsensitive);
     const bool inOwnWindow = params.contains(QStringLiteral("ownWindow"), Qt::CaseInsensitive);
     const bool noScroll = params.contains(QStringLiteral("noContentScrolling"), Qt::CaseInsensitive);
-    int screen_idx = -1;
+    int screenIdx = -1;
+    int marginLeft = 0;
+    int marginRight = 0;
     for (auto param : params) {
         if (param.startsWith("screen", Qt::CaseInsensitive)) {
             QStringList p = param.split("=");
-            screen_idx = p[1].toInt();
+            screenIdx = p[1].toInt();
+        } else if (param.startsWith("marginLeft", Qt::CaseInsensitive)) {
+            QStringList p = param.split("=");
+            marginLeft = p[1].toInt();
+        } else if (param.startsWith("marginRight", Qt::CaseInsensitive)) {
+            QStringList p = param.split("=");
+            marginRight = p[1].toInt();
         }
     }
 
@@ -38,7 +46,7 @@ OpenVirtualKeyboardInputContext::OpenVirtualKeyboardInputContext(const QStringLi
     if (params.contains(QStringLiteral("immediateLoading"), Qt::CaseInsensitive))
         loadKeyboard();
 
-    _positioner.reset(createPositioner(inOwnWindow, noScroll, screen_idx));
+    _positioner.reset(createPositioner(inOwnWindow, noScroll, screenIdx, marginLeft, marginRight));
     _positioner->enableAnimation(animated);
 
     connect(qGuiApp, &QGuiApplication::applicationStateChanged, this, [](Qt::ApplicationState s) {
@@ -566,9 +574,11 @@ bool OpenVirtualKeyboardInputContext::isShiftDoubleClicked() const
 
 AbstractPositioner *OpenVirtualKeyboardInputContext::createPositioner(bool inOwnWindow,
     bool noContentScroll,
-    int screen) const
+    int screen,
+    int marginLeft,
+    int marginRight) const
 {
     if (inOwnWindow)
-        return new KeyboardWindowPositioner(screen);
+        return new KeyboardWindowPositioner(screen, marginLeft, marginRight);
     return new InjectedKeyboardPositioner(noContentScroll);
 }
