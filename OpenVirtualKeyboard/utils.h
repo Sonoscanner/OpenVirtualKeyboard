@@ -11,21 +11,20 @@
 #include <QObject>
 #include <QVariant>
 
-namespace ovk
-{
+namespace ovk {
 
 QString pluginAbsolutePath();
 QString stylesAbsolutePath();
 QString layoutsAbsolutePath();
 
 template <typename T>
-T propertyValue( QObject* object, const char* name, T defaultValue, bool& valid )
+T propertyValue(QObject *object, const char *name, T defaultValue, bool &valid)
 {
-    if ( !object ) {
+    if (!object) {
         valid = false;
         return defaultValue;
     }
-    auto value = object->property( name );
+    auto value = object->property(name);
     valid = value.isValid()
         && static_cast<QMetaType::Type>(value.typeId()) == static_cast<QMetaType::Type>(qMetaTypeId<T>());
     return valid ? value.value<T>() : defaultValue;

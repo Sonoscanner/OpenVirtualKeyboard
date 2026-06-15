@@ -9,29 +9,28 @@
 
 #include <QQuickItem>
 
-class KeyPreview : public QQuickItem
-{
+class KeyPreview : public QQuickItem {
     Q_OBJECT
-    Q_PROPERTY(QQuickItem* delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
+    Q_PROPERTY(QQuickItem *delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
     Q_PROPERTY(qreal keyWidth READ keyWidth NOTIFY keyWidthChanged)
     Q_PROPERTY(qreal keyHeight READ keyHeight NOTIFY keyHeightChanged)
     Q_PROPERTY(QString keyText READ keyText NOTIFY keyTextChanged)
 public:
     KeyPreview();
 
-    QQuickItem* delegate() const;
+    QQuickItem *delegate() const;
 
     qreal keyWidth() const;
-    void setKeyWidth( qreal keyWidth );
+    void setKeyWidth(qreal keyWidth);
 
     qreal keyHeight() const;
-    void setKeyHeight( qreal keyHeight );
+    void setKeyHeight(qreal keyHeight);
 
     QString keyText() const;
-    void setKeyText( const QString& keyText );
+    void setKeyText(const QString &keyText);
 
 public slots:
-    void setDelegate( QQuickItem* delegate );
+    void setDelegate(QQuickItem *delegate);
 
 signals:
     void delegateChanged();
@@ -40,10 +39,10 @@ signals:
     void keyTextChanged();
 
 private:
-    QQuickItem* _delegate  = nullptr;
-    qreal       _keyWidth  = 0;
-    qreal       _keyHeight = 0;
-    QString     _keyText;
+    QQuickItem *_delegate = nullptr;
+    qreal _keyWidth = 0;
+    qreal _keyHeight = 0;
+    QString _keyText;
 };
 
 #endif // KEYPREVIEW_H

@@ -17,14 +17,14 @@ int KeyboardLayoutModel::currentPage() const
     return _currentPage;
 }
 
-void KeyboardLayoutModel::setPages( const QJsonArray& pagesData )
+void KeyboardLayoutModel::setPages(const QJsonArray &pagesData)
 {
     _pages = pagesData;
 
     if (_currentPage < _pages.size())
         emit currentPageChanged();
     else
-        setCurrentPage( 0 );
+        setCurrentPage(0);
 
     emit pagesChanged();
     notifyStretchChanged();
@@ -32,25 +32,25 @@ void KeyboardLayoutModel::setPages( const QJsonArray& pagesData )
 
 qreal KeyboardLayoutModel::adaptedStretchRow1() const
 {
-    return calculateStretchForRow( 0 );
+    return calculateStretchForRow(0);
 }
 
 qreal KeyboardLayoutModel::adaptedStretchRow2() const
 {
-    return calculateStretchForRow( 1 );
+    return calculateStretchForRow(1);
 }
 
 qreal KeyboardLayoutModel::adaptedStretchRow3() const
 {
-    return calculateStretchForRow( 2 );
+    return calculateStretchForRow(2);
 }
 
 qreal KeyboardLayoutModel::adaptedStretchRow4() const
 {
-    return calculateStretchForRow( 3 );
+    return calculateStretchForRow(3);
 }
 
-void KeyboardLayoutModel::setCurrentPage( int page )
+void KeyboardLayoutModel::setCurrentPage(int page)
 {
     if (_pages.size() > 0)
         page = page % _pages.size();
@@ -63,23 +63,23 @@ void KeyboardLayoutModel::setCurrentPage( int page )
     emit currentPageChanged();
 }
 
-qreal KeyboardLayoutModel::calculateStretchForRow( int rowIndex ) const
+qreal KeyboardLayoutModel::calculateStretchForRow(int rowIndex) const
 {
     if (_currentPage < 0 || _currentPage >= _pages.size() || _pages.empty())
         return 1;
 
-    const auto page = _pages.at( _currentPage ).toArray();
+    const auto page = _pages.at(_currentPage).toArray();
 
     if (rowIndex < 0 || rowIndex >= page.size())
         return 1;
 
-    const auto row = page.at( rowIndex ).toArray();
+    const auto row = page.at(rowIndex).toArray();
     qreal sumStretch = 0;
 
-    for (auto&& key : row) {
+    for (auto &&key : row) {
         const auto keyObject = key.toObject();
-        sumStretch += keyObject.contains( QLatin1String( "stretch" ))
-            ? keyObject[QLatin1String( "stretch" )].toDouble()
+        sumStretch += keyObject.contains(QLatin1String("stretch"))
+            ? keyObject[QLatin1String("stretch")].toDouble()
             : 1.0;
     }
 

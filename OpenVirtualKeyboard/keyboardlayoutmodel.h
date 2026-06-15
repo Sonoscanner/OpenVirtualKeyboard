@@ -7,11 +7,10 @@
 #ifndef KEYBOARDLAYOUTMODEL_H
 #define KEYBOARDLAYOUTMODEL_H
 
-#include <QObject>
 #include <QJsonArray>
+#include <QObject>
 
-class KeyboardLayoutModel : public QObject
-{
+class KeyboardLayoutModel : public QObject {
     Q_OBJECT
     Q_PROPERTY(QJsonArray pages READ pages NOTIFY pagesChanged)
     Q_PROPERTY(int currentPage READ currentPage WRITE setCurrentPage NOTIFY currentPageChanged)
@@ -24,7 +23,7 @@ public:
     QJsonArray pages() const;
     int currentPage() const;
 
-    void setPages( const QJsonArray& pagesData );
+    void setPages(const QJsonArray &pagesData);
 
     qreal adaptedStretchRow1() const;
     qreal adaptedStretchRow2() const;
@@ -32,7 +31,7 @@ public:
     qreal adaptedStretchRow4() const;
 
 public slots:
-    void setCurrentPage( int page );
+    void setCurrentPage(int page);
 
 signals:
     void pagesChanged();
@@ -43,11 +42,11 @@ signals:
     void adaptedStretchRow4Changed();
 
 private:
-    qreal calculateStretchForRow( int rowIndex ) const;
+    qreal calculateStretchForRow(int rowIndex) const;
     void notifyStretchChanged();
 
     QJsonArray _pages;
-    int        _currentPage = 0;
+    int _currentPage = 0;
 };
 
 #endif // KEYBOARDLAYOUTMODEL_H

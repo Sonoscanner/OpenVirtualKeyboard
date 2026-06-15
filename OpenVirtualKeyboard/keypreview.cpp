@@ -8,10 +8,10 @@
 
 KeyPreview::KeyPreview()
 {
-    setVisible( false );
+    setVisible(false);
 }
 
-QQuickItem* KeyPreview::delegate() const
+QQuickItem *KeyPreview::delegate() const
 {
     return _delegate;
 }
@@ -26,18 +26,18 @@ qreal KeyPreview::keyHeight() const
     return _keyHeight;
 }
 
-void KeyPreview::setDelegate( QQuickItem* delegate )
+void KeyPreview::setDelegate(QQuickItem *delegate)
 {
     if (_delegate == delegate)
         return;
 
     _delegate = delegate;
     if (_delegate)
-        _delegate->setParentItem( this );
+        _delegate->setParentItem(this);
     emit delegateChanged();
 }
 
-void KeyPreview::setKeyText( const QString& keyText )
+void KeyPreview::setKeyText(const QString &keyText)
 {
     if (_keyText == keyText)
         return;
@@ -46,9 +46,9 @@ void KeyPreview::setKeyText( const QString& keyText )
     emit keyTextChanged();
 }
 
-void KeyPreview::setKeyHeight( qreal keyHeight )
+void KeyPreview::setKeyHeight(qreal keyHeight)
 {
-    if (qFuzzyCompare( _keyHeight, keyHeight ))
+    if (qFuzzyCompare(_keyHeight, keyHeight))
         return;
 
     _keyHeight = keyHeight;
@@ -60,9 +60,9 @@ QString KeyPreview::keyText() const
     return _keyText;
 }
 
-void KeyPreview::setKeyWidth( qreal keyWidth )
+void KeyPreview::setKeyWidth(qreal keyWidth)
 {
-    if (qFuzzyCompare( _keyWidth, keyWidth ))
+    if (qFuzzyCompare(_keyWidth, keyWidth))
         return;
 
     _keyWidth = keyWidth;

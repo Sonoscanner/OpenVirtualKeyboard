@@ -4,12 +4,12 @@
  *  See accompanying LICENSE file
  */
 
-#include <algorithm>
 #include "keyalternativespreview.h"
+#include <algorithm>
 
 KeyAlternativesPreview::KeyAlternativesPreview()
 {
-    setVisible( false );
+    setVisible(false);
 }
 
 qreal KeyAlternativesPreview::keyWidth() const
@@ -27,7 +27,7 @@ QStringList KeyAlternativesPreview::alternatives() const
     return _alternatives;
 }
 
-QQuickItem* KeyAlternativesPreview::delegate() const
+QQuickItem *KeyAlternativesPreview::delegate() const
 {
     return _delegate;
 }
@@ -42,69 +42,69 @@ int KeyAlternativesPreview::alternativeIndex() const
     return _alternativeIndex;
 }
 
-void KeyAlternativesPreview::setKeyWidth( qreal keyWidth )
+void KeyAlternativesPreview::setKeyWidth(qreal keyWidth)
 {
-    if (qFuzzyCompare( _keyWidth, keyWidth ))
+    if (qFuzzyCompare(_keyWidth, keyWidth))
         return;
 
     _keyWidth = keyWidth;
     emit keyWidthChanged();
 }
 
-void KeyAlternativesPreview::setKeyHeight( qreal heyHeight )
+void KeyAlternativesPreview::setKeyHeight(qreal heyHeight)
 {
-    if (qFuzzyCompare( _heyHeight, heyHeight ))
+    if (qFuzzyCompare(_heyHeight, heyHeight))
         return;
 
     _heyHeight = heyHeight;
     emit keyHeightChanged();
 }
 
-void KeyAlternativesPreview::setAlternatives( const QStringList& alternatives )
+void KeyAlternativesPreview::setAlternatives(const QStringList &alternatives)
 {
     if (_alternatives == alternatives)
         return;
 
-    _alternatives = applyUppercase( alternatives );
+    _alternatives = applyUppercase(alternatives);
     emit alternativesChanged();
 }
 
-void KeyAlternativesPreview::setDelegate( QQuickItem* delegate )
+void KeyAlternativesPreview::setDelegate(QQuickItem *delegate)
 {
     if (_delegate == delegate)
         return;
 
     _delegate = delegate;
     if (_delegate)
-        _delegate->setParentItem( this );
+        _delegate->setParentItem(this);
     emit delegateChanged();
 }
 
-void KeyAlternativesPreview::setUppercase( bool uppercase )
+void KeyAlternativesPreview::setUppercase(bool uppercase)
 {
     if (_uppercase == uppercase)
         return;
 
     _uppercase = uppercase;
     emit uppercaseChanged();
-    _alternatives = applyUppercase( _alternatives );
+    _alternatives = applyUppercase(_alternatives);
     emit alternativesChanged();
 }
 
-QStringList KeyAlternativesPreview::applyUppercase( const QStringList& alternatives )
+QStringList KeyAlternativesPreview::applyUppercase(const QStringList &alternatives)
 {
     if (!_uppercase)
         return alternatives;
 
     QStringList transformed;
-    std::transform( std::begin( alternatives ),
-                    std::end( alternatives ),
-                    std::back_inserter( transformed ),
-                    []( const QString& c ) -> QString { return c.toUpper(); });
+    std::transform(std::begin(alternatives),
+        std::end(alternatives),
+        std::back_inserter(transformed),
+        [](const QString &c) -> QString { return c.toUpper(); });
     return transformed;
 }
 
-void KeyAlternativesPreview::setAlternativeIndex( int alternativeIndex )
+void KeyAlternativesPreview::setAlternativeIndex(int alternativeIndex)
 {
     if (_alternativeIndex == alternativeIndex)
         return;

@@ -13,27 +13,27 @@ bool Key::active() const
 
 void Key::onPressed()
 {
-    setActive( true );
+    setActive(true);
 }
 
 void Key::onEntered()
 {
-    setActive( true );
+    setActive(true);
 }
 
 void Key::onExited()
 {
-    setActive( false );
+    setActive(false);
 }
 
-void Key::onReleased( bool isClick )
+void Key::onReleased(bool isClick)
 {
-    setActive( false );
+    setActive(false);
     if (isClick)
         emit clicked();
 }
 
-void Key::setActive( bool active )
+void Key::setActive(bool active)
 {
     if (_active == active)
         return;
@@ -52,7 +52,7 @@ QVariant Key::alternatives() const
     return _alternatives;
 }
 
-QQuickItem* Key::delegate() const
+QQuickItem *Key::delegate() const
 {
     return _delegate;
 }
@@ -62,7 +62,7 @@ QString Key::text() const
     return _text;
 }
 
-void Key::setType( Key::Type type )
+void Key::setType(Key::Type type)
 {
     if (_type == type)
         return;
@@ -71,7 +71,7 @@ void Key::setType( Key::Type type )
     emit typeChanged();
 }
 
-void Key::setAlternatives( const QVariant& alternatives )
+void Key::setAlternatives(const QVariant &alternatives)
 {
     if (_alternatives == alternatives)
         return;
@@ -89,14 +89,14 @@ void Key::setText(const QString &text)
     emit textChanged();
 }
 
-void Key::setDelegate( QQuickItem* delegate )
+void Key::setDelegate(QQuickItem *delegate)
 {
     if (_delegate == delegate)
         return;
 
     _delegate = delegate;
     if (_delegate)
-        _delegate->setParentItem( this );
+        _delegate->setParentItem(this);
 
     emit delegateChanged();
 }

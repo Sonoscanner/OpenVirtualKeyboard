@@ -9,18 +9,16 @@
 
 #include <QObject>
 
-namespace KeyboardLayoutType
-{
-    Q_NAMESPACE
+namespace KeyboardLayoutType {
+Q_NAMESPACE
 
-    enum Type
-    {
-        Alphabet,
-        Symbols,
-        Dial    = Qt::ImhDialableCharactersOnly,
-        Numbers = Qt::ImhFormattedNumbersOnly,
-        Digits  = Qt::ImhDigitsOnly
-    };
-    Q_ENUM_NS(Type)
+enum Type {
+    Alphabet,
+    Symbols,
+    Dial = Qt::ImhDialableCharactersOnly,
+    Numbers = Qt::ImhFormattedNumbersOnly,
+    Digits = Qt::ImhDigitsOnly
+};
+Q_ENUM_NS(Type)
 }
 #endif // KEYBOARDLAYOUTTYPE_H

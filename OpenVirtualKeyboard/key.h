@@ -10,10 +10,9 @@
 #include <QQuickItem>
 #include <QVariant>
 
-class Key : public QQuickItem
-{
+class Key : public QQuickItem {
     Q_OBJECT
-    Q_PROPERTY(QQuickItem* delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
+    Q_PROPERTY(QQuickItem *delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(Type type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QVariant alternatives READ alternatives WRITE setAlternatives NOTIFY alternativesChanged)
@@ -37,20 +36,20 @@ public:
     void onPressed();
     void onEntered();
     void onExited();
-    void onReleased( bool isClick );
+    void onReleased(bool isClick);
 
 public:
-    void setActive( bool active );
+    void setActive(bool active);
     Type type() const;
     QVariant alternatives() const;
     QString text() const;
-    QQuickItem* delegate() const;
+    QQuickItem *delegate() const;
 
 public slots:
-    void setType( Key::Type type );
-    void setAlternatives( const QVariant& alternatives );
-    void setText( const QString& text );
-    void setDelegate( QQuickItem* delegate );
+    void setType(Key::Type type);
+    void setAlternatives(const QVariant &alternatives);
+    void setText(const QString &text);
+    void setDelegate(QQuickItem *delegate);
 
 signals:
     void activeChanged();
@@ -61,11 +60,11 @@ signals:
     void clicked();
 
 private:
-    bool        _active   = false;
-    Type        _type     = KeyDefault;
-    QVariant    _alternatives;
-    QString     _text;
-    QQuickItem* _delegate = nullptr;
+    bool _active = false;
+    Type _type = KeyDefault;
+    QVariant _alternatives;
+    QString _text;
+    QQuickItem *_delegate = nullptr;
 };
 
 #endif // KEY_H

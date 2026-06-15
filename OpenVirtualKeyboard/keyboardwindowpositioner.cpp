@@ -5,58 +5,59 @@
  */
 
 #include "keyboardwindowpositioner.h"
-#include <QGuiApplication>
-#include <QQuickWindow>
-#include <QPropertyAnimation>
-#include <QTimer>
-#include <QQuickItem>
-#include <QScreen>
-#include <QDebug>
-#include <QtGui/qguiapplication.h>
-#include "loggingcategory.h"
-#include "keypreview.h"
 #include "keyalternativespreview.h"
+#include "keypreview.h"
+#include "loggingcategory.h"
+#include <QDebug>
+#include <QGuiApplication>
+#include <QPropertyAnimation>
+#include <QQuickItem>
+#include <QQuickWindow>
+#include <QScreen>
+#include <QTimer>
+#include <QtGui/qguiapplication.h>
 
-KeyboardWindowPositioner::KeyboardWindowPositioner(int screen_idx): _screen_idx(screen_idx)
+KeyboardWindowPositioner::KeyboardWindowPositioner(int screen_idx)
+    : _screen_idx(screen_idx)
 {}
 
 KeyboardWindowPositioner::~KeyboardWindowPositioner() = default;
 
-void KeyboardWindowPositioner::setKeyboardObject( QObject* keyboardObject )
+void KeyboardWindowPositioner::setKeyboardObject(QObject *keyboardObject)
 {
-    _keyboardWindow = qobject_cast<QQuickWindow*>( keyboardObject );
+    _keyboardWindow = qobject_cast<QQuickWindow *>(keyboardObject);
     if (!_keyboardWindow) {
         qCWarning(logOvk) << "Couldn't cast keyboard object to QQuickWindow";
         return;
     }
 
-    _keyboard = _keyboardWindow->findChild<QQuickItem*>( "keyboard" );
+    _keyboard = _keyboardWindow->findChild<QQuickItem *>("keyboard");
 
-    init( _keyboard );
+    init(_keyboard);
     initKeyboardWindow();
 }
 
-void KeyboardWindowPositioner::enableAnimation( bool enabled )
+void KeyboardWindowPositioner::enableAnimation(bool enabled)
 {
     if (enabled) {
-        _animation.reset( new QPropertyAnimation );
-        _animation->setPropertyName( "y" );
-        _animation->setEasingCurve( QEasingCurve( QEasingCurve::OutCubic ));
+        _animation.reset(new QPropertyAnimation);
+        _animation->setPropertyName("y");
+        _animation->setEasingCurve(QEasingCurve(QEasingCurve::OutCubic));
 
-        connect( _animation.get(),
-                 &QAbstractAnimation::stateChanged,
-                 this,
-                 &AbstractPositioner::animatingChanged );
-        connect( _animation.get(),
-                 &QAbstractAnimation::finished,
-                 this,
-                 &KeyboardWindowPositioner::onAnimationFinished );
+        connect(_animation.get(),
+            &QAbstractAnimation::stateChanged,
+            this,
+            &AbstractPositioner::animatingChanged);
+        connect(_animation.get(),
+            &QAbstractAnimation::finished,
+            this,
+            &KeyboardWindowPositioner::onAnimationFinished);
     } else {
         _animation.reset();
     }
 }
 
-void KeyboardWindowPositioner::updateFocusItem( QQuickItem* focusItem )
+void KeyboardWindowPositioner::updateFocusItem(QQuickItem *focusItem)
 {
     _focusItem = focusItem;
     observeWindowOfFocusedItem();
@@ -68,28 +69,28 @@ void KeyboardWindowPositioner::show()
     // called setFocusObject() and showInputPanel() in wrong order (for our purposes)
     // and this way we walked around some UI imperfect behaviour.
 
-    QTimer::singleShot( 0, this, [this] {
+    QTimer::singleShot(0, this, [this] {
         if (!_keyboardWindow || !_focusItem || !_keyboard) {
             _shown = false;
             return;
         }
 
         bool alreadyShown = _shown;
-        _shown            = true;
+        _shown = true;
 
         if (alreadyShown)
             return;
 
-        QScreen* screen;
-        if ( _screen_idx != -1 ) {
-            QGuiApplication* app = qobject_cast<QGuiApplication*>( QCoreApplication::instance() );
-            screen               = app->screens()[_screen_idx];
-            qCDebug( logOvk ) << "ScreenId:" << _screen_idx;
+        QScreen *screen;
+        if (_screen_idx != -1) {
+            QGuiApplication *app = qobject_cast<QGuiApplication *>(QCoreApplication::instance());
+            screen = app->screens()[_screen_idx];
+            qCDebug(logOvk) << "ScreenId:" << _screen_idx;
         } else {
             screen = _focusItem->window()->screen();
             if (!screen)
                 return;
-            qCDebug( logOvk ) << "default screen";
+            qCDebug(logOvk) << "default screen";
         }
 
         const auto geometry = screen->geometry();
@@ -98,25 +99,25 @@ void KeyboardWindowPositioner::show()
         // transparent area of keyboard window was rendered as black.
         int screen_y = geometry.top();
         _keyboardWindow->setGeometry(
-            geometry.x(), screen_y + _keyboard->height(), geometry.width(), geometry.height() + 1 );
+            geometry.x(), screen_y + _keyboard->height(), geometry.width(), geometry.height() + 1);
         _keyboardWindow->show();
 
-        if ( _animation ) {
-            _animation->setStartValue( screen_y + geometry.height() );
-            _animation->setEndValue( screen_y );
+        if (_animation) {
+            _animation->setStartValue(screen_y + geometry.height());
+            _animation->setEndValue(screen_y);
             _animation->start();
         } else {
-            _keyboardWindow->setY( screen_y );
+            _keyboardWindow->setY(screen_y);
         }
     });
 }
 
 void KeyboardWindowPositioner::hide()
 {
-    hide( false );
+    hide(false);
 }
 
-void KeyboardWindowPositioner::hide( bool suppressAnimation )
+void KeyboardWindowPositioner::hide(bool suppressAnimation)
 {
     _shown = false;
 
@@ -125,18 +126,18 @@ void KeyboardWindowPositioner::hide( bool suppressAnimation )
 
     int screen_y = 0;
     if (_screen_idx != -1) {
-        QGuiApplication *app = qobject_cast<QGuiApplication*>( QCoreApplication::instance() );
+        QGuiApplication *app = qobject_cast<QGuiApplication *>(QCoreApplication::instance());
         QScreen *screen = app->screens()[_screen_idx];
         screen_y = screen->geometry().top();
     } else if (_keyboardWindow->screen()) {
         screen_y = _keyboardWindow->screen()->geometry().top();
     }
     if (_animation && !suppressAnimation) {
-        _animation->setStartValue( screen_y );
-        _animation->setEndValue( screen_y + _keyboard->height() );
+        _animation->setStartValue(screen_y);
+        _animation->setEndValue(screen_y + _keyboard->height());
         _animation->start();
     } else {
-        _keyboardWindow->setY( screen_y + _keyboard->height() );
+        _keyboardWindow->setY(screen_y + _keyboard->height());
         _keyboardWindow->hide();
     }
 }
@@ -152,10 +153,10 @@ void KeyboardWindowPositioner::initKeyboardWindow()
         return;
 
     const auto flags = QGuiApplication::platformName() == QLatin1String("xcb")
-        ? ( Qt::Window | Qt::BypassWindowManagerHint )
+        ? (Qt::Window | Qt::BypassWindowManagerHint)
         : Qt::Tool;
 
-    _keyboardWindow->setFlags( _keyboardWindow->flags() | flags );
+    _keyboardWindow->setFlags(_keyboardWindow->flags() | flags);
 
     setupKeyboardWindowMask();
 
@@ -167,42 +168,42 @@ void KeyboardWindowPositioner::initKeyboardWindow()
         // Note: height + 1 pixel as a work around, because of odd behaviour when
         // transparent area of keyboard window was rendered as black.
         _keyboardWindow->setGeometry(
-            geometry.x(), geometry.height(), geometry.width(), geometry.height() + 1 );
+            geometry.x(), geometry.height(), geometry.width(), geometry.height() + 1);
     }
 
-    _keyboardWindow->setVisible( false );
+    _keyboardWindow->setVisible(false);
     observeWindowOfFocusedItem();
 
     if (_animation)
-        _animation->setTargetObject( _keyboardWindow );
+        _animation->setTargetObject(_keyboardWindow);
 }
 
 void KeyboardWindowPositioner::setupKeyboardWindowMask()
 {
-    connect( _keyboard, &QQuickItem::heightChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyboard, &QQuickItem::widthChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyPreview, &QQuickItem::heightChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyPreview, &QQuickItem::widthChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyPreview, &QQuickItem::xChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyPreview, &QQuickItem::yChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyPreview, &QQuickItem::visibleChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyAlternatives, &QQuickItem::heightChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyAlternatives, &QQuickItem::widthChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyAlternatives, &QQuickItem::xChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyAlternatives, &QQuickItem::yChanged, this, &KeyboardWindowPositioner::updateMask );
-    connect( _keyAlternatives, &QQuickItem::visibleChanged, this, &KeyboardWindowPositioner::updateMask );
+    connect(_keyboard, &QQuickItem::heightChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyboard, &QQuickItem::widthChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyPreview, &QQuickItem::heightChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyPreview, &QQuickItem::widthChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyPreview, &QQuickItem::xChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyPreview, &QQuickItem::yChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyPreview, &QQuickItem::visibleChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyAlternatives, &QQuickItem::heightChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyAlternatives, &QQuickItem::widthChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyAlternatives, &QQuickItem::xChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyAlternatives, &QQuickItem::yChanged, this, &KeyboardWindowPositioner::updateMask);
+    connect(_keyAlternatives, &QQuickItem::visibleChanged, this, &KeyboardWindowPositioner::updateMask);
 
     updateMask();
 }
 
 void KeyboardWindowPositioner::observeWindowOfFocusedItem()
 {
-    static QMetaObject::Connection screenChangedConnection{};
-    static QMetaObject::Connection visibleChangedConnection{};
+    static QMetaObject::Connection screenChangedConnection {};
+    static QMetaObject::Connection visibleChangedConnection {};
 
     // as first try to discard connection to previously connected focus object
-    QObject::disconnect( screenChangedConnection );
-    QObject::disconnect( visibleChangedConnection );
+    QObject::disconnect(screenChangedConnection);
+    QObject::disconnect(visibleChangedConnection);
 
     if (!_focusItem)
         return;
@@ -210,14 +211,14 @@ void KeyboardWindowPositioner::observeWindowOfFocusedItem()
     auto window = _focusItem ? _focusItem->window() : QGuiApplication::focusWindow();
 
     if (window) {
-        screenChangedConnection = connect( window,
-                                           &QQuickWindow::screenChanged,
-                                           this,
-                                           &KeyboardWindowPositioner::onScreenChanged );
-        visibleChangedConnection = connect( window,
-                                            &QQuickWindow::visibleChanged,
-                                            this,
-                                            &KeyboardWindowPositioner::onWindowVisibleChanged );
+        screenChangedConnection = connect(window,
+            &QQuickWindow::screenChanged,
+            this,
+            &KeyboardWindowPositioner::onScreenChanged);
+        visibleChangedConnection = connect(window,
+            &QQuickWindow::visibleChanged,
+            this,
+            &KeyboardWindowPositioner::onWindowVisibleChanged);
     }
 }
 
@@ -226,22 +227,22 @@ void KeyboardWindowPositioner::updateMask()
     if (!_keyboard || !_keyboardWindow)
         return;
 
-    QRegion mask( _keyboard->x(), _keyboard->y(), _keyboard->width(), _keyboard->height() );
+    QRegion mask(_keyboard->x(), _keyboard->y(), _keyboard->width(), _keyboard->height());
 
     const auto content = _keyboardWindow->contentItem();
 
     if (_keyPreview && _keyPreview->isVisible()) {
-        const auto topLeft = content->mapFromItem( _keyPreview, QPointF( 0, 0 ));
-        mask += QRect( topLeft.x(), topLeft.y(), _keyPreview->width(), _keyPreview->height() );
+        const auto topLeft = content->mapFromItem(_keyPreview, QPointF(0, 0));
+        mask += QRect(topLeft.x(), topLeft.y(), _keyPreview->width(), _keyPreview->height());
     }
 
     if (_keyAlternatives && _keyAlternatives->isVisible()) {
-        const auto topLeft = content->mapFromItem( _keyAlternatives, QPointF( 0, 0 ));
+        const auto topLeft = content->mapFromItem(_keyAlternatives, QPointF(0, 0));
         mask += QRect(
-            topLeft.x(), topLeft.y(), _keyAlternatives->width(), _keyAlternatives->height() );
+            topLeft.x(), topLeft.y(), _keyAlternatives->width(), _keyAlternatives->height());
     }
 
-    _keyboardWindow->setMask( mask );
+    _keyboardWindow->setMask(mask);
 }
 
 void KeyboardWindowPositioner::onAnimationFinished()
@@ -250,18 +251,18 @@ void KeyboardWindowPositioner::onAnimationFinished()
         _keyboardWindow->hide();
 }
 
-void KeyboardWindowPositioner::onScreenChanged( QScreen* screen )
+void KeyboardWindowPositioner::onScreenChanged(QScreen *screen)
 {
-    if (!screen || !_keyboardWindow)// || !_keyboardWindow->isVisible())
+    if (!screen || !_keyboardWindow) // || !_keyboardWindow->isVisible())
         return;
 
     const auto geometry = screen->geometry();
     const int y = _shown ? geometry.top() : geometry.top() + _keyboard->height();
-    _keyboardWindow->setGeometry( geometry.x(), y, geometry.width(), geometry.height() + 1 );
+    _keyboardWindow->setGeometry(geometry.x(), y, geometry.width(), geometry.height() + 1);
 }
 
-void KeyboardWindowPositioner::onWindowVisibleChanged( bool visible )
+void KeyboardWindowPositioner::onWindowVisibleChanged(bool visible)
 {
     if (!visible && _shown)
-        hide( true ); // suppress animation to allow application properly close
+        hide(true); // suppress animation to allow application properly close
 }

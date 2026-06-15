@@ -12,13 +12,12 @@
 
 class QQuickItem;
 
-class AbstractPositioner : public QObject
-{
+class AbstractPositioner : public QObject {
     Q_OBJECT
 public:
-    virtual void setKeyboardObject( QObject* keyboardObject ) = 0;
-    virtual void enableAnimation( bool enabled ) = 0;
-    virtual void updateFocusItem( QQuickItem* focusItem ) = 0;
+    virtual void setKeyboardObject(QObject *keyboardObject) = 0;
+    virtual void enableAnimation(bool enabled) = 0;
+    virtual void updateFocusItem(QQuickItem *focusItem) = 0;
     virtual void show() = 0;
     virtual void hide() = 0;
     virtual bool isAnimating() const = 0;
